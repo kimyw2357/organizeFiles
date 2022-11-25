@@ -25,11 +25,11 @@ fs.promises
   function processFiles(files) {  
     files.forEach(file => {
       if(isVideoFile(file)) {
-        console.log('video', file);          
+        move(file, videoDir)        
       } else if (isCapturedFile(file)) {
-        console.log('captured', file);          
+        move(file, capturedDir)        
       } else if (isDuplicatedFile(files, file)) {
-        console.log('duplicated', file);          
+        move(file, duplicatedDir)        
       }
     }); 
   }
@@ -50,4 +50,13 @@ function isDuplicatedFile(files, file) {
   const edited = `IMG_E${file.split('_')[1]}`;
   const found = files.find(f => f.includes(edited))
   return !!found;
+}
+
+function move (file, targetDir) {
+  console.info(`move${file} to ${path.basename(targetDir)}`);
+  const oldPath = path.join(workingDir, file);
+  const newPath = path.join(targetDir, file);
+  fs.promises
+  .rename(oldPath, newPath)
+  .catch(console.log);
 }
